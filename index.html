@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glitch - Matrix Chat</title>
+    <title>Glitch - Matrix Chat Network</title>
     <style>
         * {
             margin: 0;
@@ -135,10 +135,6 @@
             transform: scale(1.05);
         }
 
-        .login-btn:active {
-            transform: scale(0.95);
-        }
-
         /* Header */
         header {
             position: relative;
@@ -185,6 +181,7 @@
             border: 1px solid #0f0;
             border-radius: 5px;
             text-shadow: 0 0 10px #0f0;
+            font-size: 0.9em;
         }
 
         @keyframes glitch {
@@ -305,6 +302,8 @@
             opacity: 0.6;
             font-size: 1.2em;
             text-align: center;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .messages {
@@ -411,10 +410,6 @@
             transform: scale(1.05);
         }
 
-        .send-btn:active {
-            transform: scale(0.95);
-        }
-
         /* Right Sidebar - Online Users */
         .online-users {
             background: rgba(0, 20, 0, 0.8);
@@ -449,15 +444,23 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            cursor: pointer;
             transition: all 0.3s;
             word-break: break-word;
+            position: relative;
         }
 
         .online-user:hover {
             background: rgba(0, 150, 0, 0.5);
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
             transform: translateX(5px);
+        }
+
+        .online-user-info {
+            flex: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .online-indicator {
@@ -469,6 +472,32 @@
             animation: pulse 2s infinite;
             box-shadow: 0 0 10px #0f0;
             flex-shrink: 0;
+        }
+
+        .request-btn {
+            padding: 6px 10px;
+            background: #0f0;
+            color: #000;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8em;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .request-btn:hover {
+            background: #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+        }
+
+        .request-btn.requested {
+            background: rgba(0, 255, 0, 0.3);
+            color: #0f0;
+            cursor: not-allowed;
+            opacity: 0.7;
         }
 
         @keyframes pulse {
@@ -487,6 +516,165 @@
             padding: 20px 10px;
         }
 
+        /* Chat Request Modal */
+        .request-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99;
+        }
+
+        .request-modal.hidden {
+            display: none;
+        }
+
+        .request-container {
+            background: rgba(0, 20, 0, 0.95);
+            border: 2px solid #0f0;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            animation: slideIn 0.3s ease-in;
+            max-width: 400px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .request-container h2 {
+            color: #0f0;
+            font-size: 1.5em;
+            text-shadow: 0 0 10px #0f0;
+            margin-bottom: 15px;
+        }
+
+        .request-container p {
+            color: #0f0;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        .request-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .request-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+
+        .accept-btn {
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .accept-btn:hover {
+            background: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+        }
+
+        .decline-btn {
+            background: rgba(0, 255, 0, 0.2);
+            color: #0f0;
+            border: 1px solid #0f0;
+        }
+
+        .decline-btn:hover {
+            background: rgba(0, 255, 0, 0.4);
+        }
+
+        /* Requests Panel */
+        .requests-panel {
+            background: rgba(0, 20, 0, 0.8);
+            border: 1px solid #ff6600;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 0 15px rgba(255, 102, 0, 0.2);
+        }
+
+        .requests-panel h4 {
+            color: #ff6600;
+            font-size: 0.9em;
+            text-shadow: 0 0 5px #ff6600;
+            margin-bottom: 10px;
+        }
+
+        .request-item {
+            padding: 10px;
+            margin: 8px 0;
+            background: rgba(255, 102, 0, 0.1);
+            border-left: 2px solid #ff6600;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+        }
+
+        .request-item-user {
+            color: #ff6600;
+            font-weight: bold;
+        }
+
+        .request-item-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .request-item-buttons button {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+
+        .accept-req-btn {
+            background: #0f0;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .accept-req-btn:hover {
+            background: #00ff00;
+        }
+
+        .decline-req-btn {
+            background: rgba(0, 255, 0, 0.2);
+            color: #0f0;
+            border: 1px solid #0f0;
+        }
+
+        .decline-req-btn:hover {
+            background: rgba(0, 255, 0, 0.4);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .container {
@@ -501,11 +689,6 @@
             .header-title {
                 font-size: 2em;
                 letter-spacing: 5px;
-            }
-
-            .user-info {
-                font-size: 0.9em;
-                padding: 8px 15px;
             }
         }
 
@@ -545,21 +728,33 @@
     <!-- Login Modal -->
     <div class="login-modal" id="loginModal">
         <div class="login-container">
-            <h1>01000111 01001100 01001001 01010100 01000011 01001000</h1>
-            <p>Enter your username to access the network</p>
+            <h1>⚡ GLITCH ⚡</h1>
+            <p>Enter your username to join the network</p>
             <input type="text" id="usernameInput" class="login-input" placeholder="Enter username..." onkeypress="handleLoginKeyPress(event)">
             <button class="login-btn" onclick="joinNetwork()">JOIN NETWORK</button>
+        </div>
+    </div>
+
+    <!-- Chat Request Modal -->
+    <div class="request-modal hidden" id="requestModal">
+        <div class="request-container">
+            <h2>💬 Chat Request</h2>
+            <p><span id="requestFromUser"></span> wants to chat with you!</p>
+            <div class="request-buttons">
+                <button class="accept-btn" onclick="acceptRequest()">ACCEPT</button>
+                <button class="decline-btn" onclick="declineRequest()">DECLINE</button>
+            </div>
         </div>
     </div>
 
     <!-- Header -->
     <header>
         <div class="header-content">
-            <div class="header-title">01000111 01001100 01001001 01010100 01000011 01001000</div>
-            <div class="binary-text">// GLITCH NETWORK INITIALIZED //</div>
+            <div class="header-title">⚡ GLITCH ⚡</div>
+            <div class="binary-text">// NETWORK ACTIVE //</div>
         </div>
         <div class="user-info">
-            <div>User: <span id="currentUsername">--</span></div>
+            <div>📡 <span id="currentUsername">--</span></div>
         </div>
     </header>
 
@@ -567,19 +762,27 @@
     <div class="container">
         <!-- Sidebar - Chat History -->
         <div class="sidebar">
-            <h3>💬 CHAT HISTORY</h3>
+            <h3>💬 CONVERSATIONS</h3>
             <div class="chat-list" id="chatList">
-                <div class="no-chats">No chats yet</div>
+                <div class="no-chats">No active chats</div>
             </div>
         </div>
 
         <!-- Main Chat Area -->
         <div class="main-chat">
             <div class="chat-header">
-                <h2>💬 <span id="current-chat">Select a user to chat</span></h2>
+                <h2>💬 <span id="current-chat">Select a user to start chatting</span></h2>
             </div>
+            
+            <!-- Pending Requests Panel -->
+            <div class="requests-panel" id="requestsPanel" style="display: none; margin: 15px;">
+                <h4>📬 PENDING REQUESTS</h4>
+                <div id="requestsList"></div>
+            </div>
+
             <div class="no-chat-selected" id="noChatSelected">
-                Select a user from the right panel to start chatting
+                <div>👉 Select a user from the right panel</div>
+                <div style="font-size: 0.8em; opacity: 0.6;">Click REQUEST to send a chat request</div>
             </div>
             <div class="messages" id="messages-container" style="display: none;"></div>
             <div class="input-area" id="inputArea" style="display: none;">
@@ -598,13 +801,13 @@
     </div>
 
     <script>
-        // WebSocket or Peer Connection Setup
-        const peers = new Map(); // Store peer connections
         let currentUser = null;
         let selectedUser = null;
-        const chatHistories = new Map(); // Store chat histories
+        const chatHistories = new Map();
+        const chatRequests = new Map(); // {requester: timestamp}
+        const sentRequests = new Set(); // Track who we've requested
 
-        // Matrix Rain Animation
+        // ============ MATRIX RAIN ANIMATION ============
         function createMatrixRain() {
             const background = document.getElementById('matrix-background');
             const width = window.innerWidth;
@@ -628,202 +831,4 @@
             const duration = Math.random() * 8 + 4;
             const startY = parseFloat(char.style.top);
 
-            let startTime;
-            function animate(currentTime) {
-                if (!startTime) startTime = currentTime;
-                const elapsed = (currentTime - startTime) / 1000;
-                const progress = (elapsed % duration) / duration;
-
-                char.style.top = (startY + progress * 500) + 'px';
-                char.textContent = Math.random() > 0.5 ? '0' : '1';
-                char.style.opacity = Math.sin(progress * Math.PI);
-
-                requestAnimationFrame(animate);
-            }
-            requestAnimationFrame(animate);
-        }
-
-        // Initialize matrix rain
-        createMatrixRain();
-
-        // Login functionality
-        function handleLoginKeyPress(event) {
-            if (event.key === 'Enter') {
-                joinNetwork();
-            }
-        }
-
-        function joinNetwork() {
-            const username = document.getElementById('usernameInput').value.trim();
-            
-            if (username === '') {
-                alert('Please enter a username');
-                return;
-            }
-
-            currentUser = username;
-            document.getElementById('currentUsername').textContent = username;
-            document.getElementById('loginModal').classList.add('hidden');
-
-            // Simulate broadcasting to other users
-            broadcastUserJoined(username);
-        }
-
-        // Simulate user broadcast (in real scenario, this would be WebSocket/Peer connections)
-        function broadcastUserJoined(username) {
-            // Simulate other users connecting
-            setTimeout(() => {
-                addOnlineUser(username);
-            }, 500);
-        }
-
-        function addOnlineUser(username) {
-            const usersList = document.getElementById('usersList');
-            
-            // Remove "Waiting for users" message
-            const noUsers = usersList.querySelector('.no-users');
-            if (noUsers) {
-                noUsers.remove();
-            }
-
-            // Check if user already exists
-            if (document.querySelector(`[data-user="${username}"]`)) {
-                return;
-            }
-
-            const userEl = document.createElement('div');
-            userEl.className = 'online-user';
-            userEl.setAttribute('data-user', username);
-            userEl.onclick = () => selectUserChat(username);
-            userEl.innerHTML = `
-                <span class="online-indicator"></span>
-                <span>${username}</span>
-            `;
-
-            usersList.appendChild(userEl);
-        }
-
-        function selectUserChat(username) {
-            if (username === currentUser) {
-                alert("You can't chat with yourself!");
-                return;
-            }
-
-            selectedUser = username;
-            document.getElementById('current-chat').textContent = username;
-            document.getElementById('noChatSelected').style.display = 'none';
-            document.getElementById('messages-container').style.display = 'flex';
-            document.getElementById('inputArea').style.display = 'flex';
-
-            loadChatHistory(username);
-
-            // Update active chat in history
-            document.querySelectorAll('.chat-item').forEach(el => {
-                el.classList.remove('active');
-            });
-            const activeChat = document.querySelector(`[data-chat="${username}"]`);
-            if (activeChat) {
-                activeChat.classList.add('active');
-            }
-        }
-
-        function loadChatHistory(username) {
-            const container = document.getElementById('messages-container');
-            container.innerHTML = '';
-
-            const messages = chatHistories.get(username) || [];
-            messages.forEach(msg => {
-                const messageEl = document.createElement('div');
-                messageEl.className = 'message' + (msg.sender === currentUser ? ' own' : '');
-                messageEl.innerHTML = `
-                    <div class="message-sender">@${msg.sender}</div>
-                    <div class="message-text">${msg.text}</div>
-                    <div class="message-time">${msg.time}</div>
-                `;
-                container.appendChild(messageEl);
-            });
-
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function sendMessage() {
-            if (!selectedUser) return;
-
-            const input = document.getElementById('message-input');
-            const text = input.value.trim();
-
-            if (text === '') return;
-
-            const now = new Date();
-            const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-            // Add to chat history
-            if (!chatHistories.has(selectedUser)) {
-                chatHistories.set(selectedUser, []);
-                addChatToHistory(selectedUser);
-            }
-
-            const message = { sender: currentUser, text: text, time: time };
-            chatHistories.get(selectedUser).push(message);
-
-            // Display message
-            const messageEl = document.createElement('div');
-            messageEl.className = 'message own';
-            messageEl.innerHTML = `
-                <div class="message-sender">@${currentUser}</div>
-                <div class="message-text">${text}</div>
-                <div class="message-time">${time}</div>
-            `;
-
-            document.getElementById('messages-container').appendChild(messageEl);
-            input.value = '';
-            document.getElementById('messages-container').scrollTop = document.getElementById('messages-container').scrollHeight;
-
-            // In a real scenario, this would send the message to the other user via WebSocket/Peer connection
-            simulateMessageReceived(selectedUser, text, time);
-        }
-
-        function simulateMessageReceived(fromUser, text, time) {
-            // Simulate the other user receiving the message
-            // In a real app, this would be triggered by WebSocket/Peer connection
-            console.log(`Message sent to ${fromUser}: ${text}`);
-        }
-
-        function addChatToHistory(username) {
-            const chatList = document.getElementById('chatList');
-            
-            // Remove "No chats yet" message
-            const noChats = chatList.querySelector('.no-chats');
-            if (noChats) {
-                noChats.remove();
-            }
-
-            const chatEl = document.createElement('div');
-            chatEl.className = 'chat-item';
-            chatEl.setAttribute('data-chat', username);
-            chatEl.textContent = username;
-            chatEl.onclick = () => selectUserChat(username);
-
-            chatList.appendChild(chatEl);
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
-
-        window.addEventListener('resize', () => {
-            document.getElementById('matrix-background').innerHTML = '';
-            createMatrixRain();
-        });
-
-        // Example: Simulate other users joining
-        setTimeout(() => {
-            // These would normally come from actual users connecting
-            console.log('Simulating other users connecting...');
-        }, 1000);
-    </script>
-
-</body>
-</html>
+            let start

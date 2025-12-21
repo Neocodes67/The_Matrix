@@ -1,37 +1,526 @@
-Last login: Sun Dec 21 16:04:39 on ttys000
-david@Mac ~ % ls
-Applications			lynx_help_main.html
-Cisco Packet Tracer 8.2.2	MEGA
-Desktop				Movies
-Documents			Music
-Downloads			OneDrive - CUNY
-Games				Pictures
-Library				Public
-david@Mac ~ % cd Desktop 
-david@Mac Desktop % cs
-zsh: command not found: cs
-david@Mac Desktop % cd
-david@Mac ~ % ls
-Applications			lynx_help_main.html
-Cisco Packet Tracer 8.2.2	MEGA
-Desktop				Movies
-Documents			Music
-Downloads			OneDrive - CUNY
-Games				Pictures
-Library				Public
-david@Mac ~ % cd Desktop 
-david@Mac Desktop % ls
-~$ila chat5.txt
-~$vidEmiral_Documentation Final Porject.docx
-2025-09-10 12-57-57.mov
-Matrix
-MUSIC
-Personal
-School
-Work
-david@Mac Desktop % cd Matrix 
-david@Mac Matrix % vim
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
+body {
+    font-family: 'Courier New', monospace;
+    background-color: #000;
+    color: #0f0;
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Matrix Background */
+.matrix-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 0;
+    opacity: 0.1;
+}
+
+#matrixCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, rgba(0, 30, 0, 0.9), rgba(0, 60, 0, 0.8));
+    border: 2px solid #0f0;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 10px rgba(0, 255, 0, 0.1);
+    animation: glitch-in 0.5s ease;
+}
+
+.modal-content h2 {
+    color: #0f0;
+    margin-bottom: 30px;
+    font-size: 24px;
+    text-shadow: 0 0 10px #0f0;
+    letter-spacing: 3px;
+}
+
+#usernameInput {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    background-color: rgba(0, 255, 0, 0.1);
+    border: 2px solid #0f0;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#usernameInput:focus {
+    box-shadow: 0 0 15px #0f0;
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+#usernameInput::placeholder {
+    color: #0a0;
+    opacity: 0.5;
+}
+
+#joinBtn {
+    width: 100%;
+    padding: 12px;
+    background-color: transparent;
+    border: 2px solid #0f0;
+    color: #0f0;
+    font-size: 16px;
+    font-family: 'Courier New', monospace;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+#joinBtn:hover {
+    background-color: #0f0;
+    color: #000;
+    box-shadow: 0 0 20px #0f0;
+}
+
+#joinBtn:active {
+    transform: scale(0.98);
+}
+
+.glitch-text {
+    color: #0f0;
+    font-size: 12px;
+    margin-top: 20px;
+    animation: flicker 2s infinite;
+}
+
+/* Main Container */
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: relative;
+    z-index: 1;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.main-container.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(180deg, rgba(0, 40, 0, 0.8), rgba(0, 20, 0, 0.6));
+    border-bottom: 3px solid #0f0;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2), inset 0 0 10px rgba(0, 255, 0, 0.1);
+    position: relative;
+}
+
+.binary-header {
+    position: relative;
+    height: 100px;
+}
+
+.glitch-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 10px #0f0);
+}
+
+.glitch-title {
+    font-size: 48px;
+    font-weight: bold;
+    fill: #0f0;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+    animation: glitch-text 0.15s infinite, glow-pulse 2s ease-in-out infinite;
+}
+
+.header-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    font-weight: bold;
+    color: #0f0;
+    text-shadow: 0 0 20px #0f0, -3px -3px 0 #ff00ff, 3px 3px 0 #00ffff;
+    letter-spacing: 10px;
+    animation: glitch-header 0.3s infinite;
+    z-index: 2;
+}
+
+/* Chat Wrapper */
+.chat-wrapper {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    gap: 10px;
+    padding: 10px;
+}
+
+/* Users Sidebar */
+.users-sidebar {
+    width: 200px;
+    background: linear-gradient(135deg, rgba(0, 40, 0, 0.7), rgba(0, 20, 0, 0.5));
+    border: 2px solid #0f0;
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.2), inset 0 0 10px rgba(0, 255, 0, 0.05);
+    overflow-y: auto;
+    animation: sidebar-glow 3s ease-in-out infinite;
+}
+
+.sidebar-header {
+    color: #0f0;
+    font-size: 12px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #0f0;
+    text-shadow: 0 0 10px #0f0;
+    letter-spacing: 2px;
+}
+
+.users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.user-item {
+    padding: 10px;
+    background: rgba(0, 255, 0, 0.05);
+    border: 1px solid #0f0;
+    border-radius: 3px;
+    color: #0f0;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.user-item::before {
+    content: '';
+    position: absolute;
+    left: -100%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.user-item:hover {
+    background: rgba(0, 255, 0, 0.15);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    transform: translateX(5px);
+}
+
+.user-item:hover::before {
+    left: 100%;
+}
+
+.user-status {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: #0f0;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+}
+
+/* Chat Container */
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, rgba(0, 30, 0, 0.6), rgba(0, 15, 0, 0.4));
+    border: 2px solid #0f0;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2), inset 0 0 15px rgba(0, 255, 0, 0.05);
+    overflow: hidden;
+}
+
+.messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    animation: message-appear 0.3s ease;
+}
+
+.message-content {
+    padding: 12px 15px;
+    background: rgba(0, 255, 0, 0.08);
+    border-left: 3px solid #0f0;
+    border-radius: 3px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.message-content:hover {
+    background: rgba(0, 255, 0, 0.12);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+    transform: translateX(5px);
+}
+
+.message-username {
+    color: #0f0;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px #0f0;
+    font-size: 13px;
+}
+
+.message-text {
+    color: #0f0;
+    word-wrap: break-word;
+    line-height: 1.5;
+}
+
+.message-time {
+    color: #0a0;
+    font-size: 11px;
+    margin-top: 5px;
+    opacity: 0.7;
+}
+
+/* Input Area */
+.input-area {
+    display: flex;
+    gap: 10px;
+    padding: 15px;
+    background: rgba(0, 40, 0, 0.5);
+    border-top: 2px solid #0f0;
+}
+
+#messageInput {
+    flex: 1;
+    padding: 12px;
+    background-color: rgba(0, 255, 0, 0.05);
+    border: 1px solid #0f0;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+    border-radius: 3px;
+}
+
+#messageInput:focus {
+    background-color: rgba(0, 255, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+}
+
+#messageInput::placeholder {
+    color: #0a0;
+    opacity: 0.5;
+}
+
+#sendBtn {
+    padding: 12px 25px;
+    background-color: transparent;
+    border: 1px solid #0f0;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#sendBtn:hover {
+    background-color: #0f0;
+    color: #000;
+    box-shadow: 0 0 20px #0f0;
+}
+
+#sendBtn:active {
+    transform: scale(0.98);
+}
+
+/* Status Bar */
+.status-bar {
+    background: linear-gradient(90deg, rgba(0, 40, 0, 0.8), rgba(0, 20, 0, 0.6));
+    border-top: 2px solid #0f0;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    color: #0f0;
+    font-size: 12px;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.1);
+    letter-spacing: 1px;
+}
+
+#statusText {
+    animation: flicker 3s infinite;
+    text-shadow: 0 0 10px #0f0;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 255, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0f0;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0f8;
+    box-shadow: 0 0 10px #0f0;
+}
+
+/* Animations */
+@keyframes glitch-in {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes glitch-text {
+    0%, 100% {
+        text-shadow: 0 0 10px #0f0;
+    }
+    20% {
+        text-shadow: -2px 2px 5px #ff00ff;
+    }
+    40% {
+        text-shadow: 2px -2px 5px #00ffff;
+    }
+    60% {
+        text-shadow: 0 0 10px #0f0;
+    }
+    80% {
+        text-shadow: -2px 2px 5px #ff00ff;
+    }
+}
+
+@keyframes glitch-header {
+    0%, 100% {
+        clip-path: inset(0);
+    }
+    20% {
+        clip-path: inset(10% 0 0 0);
+    }
+    40% {
+        clip-path: inset(0 0 10% 0);
+    }
+    60% {
+        clip-path: inset(0 10% 0 0);
+    }
+    80% {
+        clip-path: inset(0 0 0 10%);
+    }
+}
+
+@keyframes glow-pulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 10px #0f0);
+    }
+    50% {
+        filter: drop-shadow(0 0 20px #0f0);
+    }
+}
+
+@keyframes flicker {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes message-appear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes sidebar-glow {
+    0%, 100% {
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.2), inset 0 0 10px rgba(0, 255, 0, 0.05);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(0, 255, 0, 0.3), inset 0 0 15px rgba(0, 255, 0, 0.1);
+    }
+}
+
+.binary-text {
+    color: #0f0;
+    text-shadow: 0 0 10px #0f0;
+    letter-spacing: 2px;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -53,6 +542,3 @@ david@Mac Matrix % vim
         font-size: 32px;
     }
 }
-
-
--- INSERT --recording @s

@@ -1,0 +1,58 @@
+Last login: Sun Dec 21 16:04:39 on ttys000
+david@Mac ~ % ls
+Applications			lynx_help_main.html
+Cisco Packet Tracer 8.2.2	MEGA
+Desktop				Movies
+Documents			Music
+Downloads			OneDrive - CUNY
+Games				Pictures
+Library				Public
+david@Mac ~ % cd Desktop 
+david@Mac Desktop % cs
+zsh: command not found: cs
+david@Mac Desktop % cd
+david@Mac ~ % ls
+Applications			lynx_help_main.html
+Cisco Packet Tracer 8.2.2	MEGA
+Desktop				Movies
+Documents			Music
+Downloads			OneDrive - CUNY
+Games				Pictures
+Library				Public
+david@Mac ~ % cd Desktop 
+david@Mac Desktop % ls
+~$ila chat5.txt
+~$vidEmiral_Documentation Final Porject.docx
+2025-09-10 12-57-57.mov
+Matrix
+MUSIC
+Personal
+School
+Work
+david@Mac Desktop % cd Matrix 
+david@Mac Matrix % vim
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .chat-wrapper {
+        flex-direction: column;
+    }
+
+    .users-sidebar {
+        width: 100%;
+        max-height: 150px;
+    }
+
+    .header-text {
+        font-size: 32px;
+        letter-spacing: 5px;
+    }
+
+    .glitch-title {
+        font-size: 32px;
+    }
+}
+
+
+-- INSERT --recording @s

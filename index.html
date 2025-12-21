@@ -1,30 +1,71 @@
-Last login: Sun Dec 21 16:05:07 on ttys000
-david@Mac ~ % vim
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLITCH - Matrix Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Binary Rain Background -->
+    <div class="matrix-background">
+        <canvas id="matrixCanvas"></canvas>
+    </div>
 
+    <!-- Modal for Username Entry -->
+    <div id="usernameModal" class="modal active">
+        <div class="modal-content">
+            <h2 class="binary-text">ENTER THE MATRIX</h2>
+            <input 
+                type="text" 
+                id="usernameInput" 
+                placeholder="Enter your username" 
+                maxlength="20"
+                autocomplete="off"
+            >
+            <button id="joinBtn" onclick="joinChat()">JOIN</button>
+            <p class="glitch-text">[ INITIALIZING CONNECTION ]</p>
+        </div>
+    </div>
 
+    <!-- Main Container -->
+    <div id="mainContainer" class="main-container hidden">
+        <!-- Header with Binary "GLITCH" -->
+        <header class="header">
+            <div class="binary-header">
+                <svg viewBox="0 0 800 120" class="glitch-svg">
+                    <defs>
+                        <filter id="glitch-filter">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise" seed="2" />
+                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" />
+                        </filter>
+                    </defs>
+                    <text x="400" y="90" text-anchor="middle" class="glitch-title">
+                        01000111 01001100 01001001 01010100 01000011 01001000
+                    </text>
+                </svg>
+                <div class="header-text">GLITCH</div>
+            </div>
+        </header>
 
+        <!-- Main Chat Area -->
+        <div class="chat-wrapper">
+            <!-- Users Sidebar -->
+            <aside class="users-sidebar">
+                <div class="sidebar-header">[ USERS ONLINE ]</div>
+                <div id="usersList" class="users-list"></div>
+            </aside>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        type="text"
-                        id="messageInput"
-                        placeholder="Enter message..."
+            <!-- Chat Area -->
+            <main class="chat-container">
+                <div id="messagesContainer" class="messages-container"></div>
+                
+                <!-- Message Input -->
+                <div class="input-area">
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="Enter message..." 
                         maxlength="500"
                         autocomplete="off"
                     >
@@ -43,6 +84,3 @@ david@Mac ~ % vim
     <script src="script.js"></script>
 </body>
 </html>
-
-
--- INSERT --

@@ -804,8 +804,9 @@
         let currentUser = null;
         let selectedUser = null;
         const chatHistories = new Map();
-        const chatRequests = new Map(); // {requester: timestamp}
-        const sentRequests = new Set(); // Track who we've requested
+        const chatRequests = new Map();
+        const sentRequests = new Set();
+        let pendingRequestFrom = null;
 
         // ============ MATRIX RAIN ANIMATION ============
         function createMatrixRain() {
@@ -820,7 +821,6 @@
                 char.style.left = Math.random() * width + 'px';
                 char.style.top = Math.random() * height + 'px';
                 char.style.fontSize = Math.random() * 20 + 10 + 'px';
-                char.style.animationDelay = Math.random() * 2 + 's';
 
                 background.appendChild(char);
                 animateMatrixChar(char);
@@ -831,4 +831,114 @@
             const duration = Math.random() * 8 + 4;
             const startY = parseFloat(char.style.top);
 
-            let start
+            let startTime;
+            function animate(currentTime) {
+                if (!startTime) startTime = currentTime;
+                const elapsed = (currentTime - startTime) / 1000;
+                const progress = (elapsed % duration) / duration;
+
+                char.style.top = (startY + progress * 500) + 'px';
+                char.textContent = Math.random() > 0.5 ? '0' : '1';
+                char.style.opacity = Math.sin(progress * Math.PI);
+
+                requestAnimationFrame(animate);
+            }
+            requestAnimationFrame(animate);
+        }
+
+        createMatrixRain();
+
+        // ============ LOGIN SYSTEM ============
+        function handleLoginKeyPress(event) {
+            if (event.key === 'Enter') {
+                joinNetwork();
+            }
+        }
+
+        function joinNetwork() {
+            const username = document.getElementById('usernameInput').value.trim();
+            
+            if (username === '') {
+                alert('Please enter a username');
+                return;
+            }
+
+            if (username.length > 20) {
+                alert('Username too long (max 20 characters)');
+                return;
+            }
+
+            currentUser = username;
+            document.getElementById('currentUsername').textContent = username;
+            document.getElementById('loginModal').classList.add('hidden');
+
+            broadcastPresence();
+            setInterval(broadcastPresence, 3000);
+            setInterval(updateOnlineUsers, 2000);
+            setInterval(checkForRequests, 1500);
+            
+            updateOnlineUsers();
+        }
+
+        // ============ PRESENCE BROADCAST SYSTEM ============
+        function broadcastPresence() {
+            const users = JSON.parse(localStorage.getItem('glitch_users') || '{}');
+            users[currentUser] = {
+                timestamp: Date.now(),
+                username: currentUser
+            };
+            localStorage.setItem('glitch_users', JSON.stringify(users));
+        }
+
+        function updateOnlineUsers() {
+            const users = JSON.parse(localStorage.getItem('glitch_users') || '{}');
+            const now = Date.now();
+            const onlineThreshold = 10000;
+
+            for (let user in users) {
+                if (now - users[user].timestamp > onlineThreshold) {
+                    delete users[user];
+                }
+            }
+            localStorage.setItem('glitch_users', JSON.stringify(users));
+
+            const usersList = document.getElementById('usersList');
+            const existingUsers = new Set(Array.from(usersList.querySelectorAll('[data-user]')).map(el => el.getAttribute('data-user')));
+            
+            for (let user in users) {
+                if (user === currentUser) continue;
+                
+                if (!existingUsers.has(user)) {
+                    addOnlineUser(user);
+                }
+            }
+
+            usersList.querySelectorAll('[data-user]').forEach(el => {
+                const user = el.getAttribute('data-user');
+                if (!users[user] && user !== currentUser) {
+                    el.remove();
+                }
+            });
+
+            const noUsers = usersList.querySelector('.no-users');
+            const userCount = Object.keys(users).length - 1;
+            if (userCount === 0) {
+                if (!noUsers) {
+                    const noUsersEl = document.createElement('div');
+                    noUsersEl.className = 'no-users';
+                    noUsersEl.textContent = 'Waiting for users...';
+                    usersList.appendChild(noUsersEl);
+                }
+            } else {
+                if (noUsers) noUsers.remove();
+            }
+        }
+
+        function addOnlineUser(username) {
+            const usersList = document.getElementById('usersList');
+            
+            const userEl = document.createElement('div');
+            userEl.className = 'online-user';
+            userEl.setAttribute('data-user', username);
+            userEl.innerHTML = `
+                <div class="online-user-info" onclick="

@@ -37,6 +37,108 @@
             text-shadow: 0 0 10px #0f0;
         }
 
+        /* Login Modal */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .login-modal.hidden {
+            display: none;
+        }
+
+        .login-container {
+            background: rgba(0, 20, 0, 0.9);
+            border: 2px solid #0f0;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            animation: loginFadeIn 0.5s ease-in;
+        }
+
+        @keyframes loginFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .login-container h1 {
+            font-size: 2.5em;
+            color: #0f0;
+            text-shadow: 0 0 20px #0f0;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        .login-container p {
+            color: #0f0;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .login-input {
+            width: 300px;
+            padding: 12px 15px;
+            background: rgba(0, 50, 0, 0.7);
+            border: 1px solid #0f0;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            border-radius: 5px;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .login-input:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+            background: rgba(0, 80, 0, 0.8);
+        }
+
+        .login-input::placeholder {
+            color: #0f0;
+            opacity: 0.5;
+        }
+
+        .login-btn {
+            width: 300px;
+            padding: 12px;
+            background: #0f0;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+            font-family: 'Courier New', monospace;
+        }
+
+        .login-btn:hover {
+            background: #00ff00;
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.8);
+            transform: scale(1.05);
+        }
+
+        .login-btn:active {
+            transform: scale(0.95);
+        }
+
         /* Header */
         header {
             position: relative;
@@ -45,6 +147,14 @@
             padding: 30px 20px;
             border-bottom: 2px solid #0f0;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content {
+            flex: 1;
             text-align: center;
         }
 
@@ -64,6 +174,17 @@
             letter-spacing: 2px;
             text-shadow: 0 0 10px #0f0;
             animation: blink 1.5s infinite;
+        }
+
+        .user-info {
+            position: absolute;
+            right: 20px;
+            top: 30px;
+            background: rgba(0, 50, 0, 0.6);
+            padding: 10px 20px;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            text-shadow: 0 0 10px #0f0;
         }
 
         @keyframes glitch {
@@ -88,22 +209,24 @@
         .container {
             position: relative;
             z-index: 5;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
             display: grid;
-            grid-template-columns: 250px 1fr 300px;
+            grid-template-columns: 280px 1fr 300px;
             gap: 20px;
             min-height: calc(100vh - 200px);
         }
 
-        /* Sidebar */
+        /* Sidebar - Chat History */
         .sidebar {
             background: rgba(0, 20, 0, 0.8);
             border: 1px solid #0f0;
             border-radius: 5px;
             padding: 20px;
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar h3 {
@@ -112,42 +235,42 @@
             text-shadow: 0 0 10px #0f0;
             border-bottom: 1px solid #0f0;
             padding-bottom: 10px;
+            font-size: 1.1em;
         }
 
-        .user-item {
-            padding: 10px;
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            padding: 12px;
             margin: 8px 0;
             background: rgba(0, 100, 0, 0.3);
             border-left: 3px solid #0f0;
             cursor: pointer;
             transition: all 0.3s;
             border-radius: 3px;
+            word-break: break-word;
         }
 
-        .user-item:hover {
+        .chat-item:hover {
             background: rgba(0, 150, 0, 0.5);
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
             transform: translateX(5px);
         }
 
-        .online-indicator {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #0f0;
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: pulse 2s infinite;
-            box-shadow: 0 0 10px #0f0;
+        .chat-item.active {
+            background: rgba(0, 200, 0, 0.6);
+            border-left: 3px solid #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
+        .no-chats {
+            color: #0f0;
+            opacity: 0.6;
+            text-align: center;
+            padding: 20px 10px;
         }
 
         /* Main Chat Area */
@@ -173,6 +296,17 @@
             text-shadow: 0 0 10px #0f0;
         }
 
+        .no-chat-selected {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #0f0;
+            opacity: 0.6;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
         .messages {
             flex: 1;
             overflow-y: auto;
@@ -188,11 +322,11 @@
             background: rgba(0, 50, 0, 0.4);
             border-left: 3px solid #0f0;
             animation: fadeIn 0.5s ease-in;
+            max-width: 70%;
         }
 
         .message.own {
             align-self: flex-end;
-            max-width: 70%;
             background: rgba(0, 100, 0, 0.5);
             border-left: none;
             border-right: 3px solid #0f0;
@@ -288,6 +422,8 @@
             border-radius: 5px;
             padding: 20px;
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            display: flex;
+            flex-direction: column;
         }
 
         .online-users h3 {
@@ -296,10 +432,16 @@
             text-shadow: 0 0 10px #0f0;
             border-bottom: 1px solid #0f0;
             padding-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .users-list {
+            flex: 1;
+            overflow-y: auto;
         }
 
         .online-user {
-            padding: 10px;
+            padding: 12px;
             margin: 8px 0;
             background: rgba(0, 100, 0, 0.3);
             border-left: 3px solid #0f0;
@@ -307,6 +449,42 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            word-break: break-word;
+        }
+
+        .online-user:hover {
+            background: rgba(0, 150, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            transform: translateX(5px);
+        }
+
+        .online-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #0f0;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px #0f0;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .no-users {
+            color: #0f0;
+            opacity: 0.6;
+            text-align: center;
+            padding: 20px 10px;
         }
 
         /* Responsive */
@@ -324,61 +502,38 @@
                 font-size: 2em;
                 letter-spacing: 5px;
             }
+
+            .user-info {
+                font-size: 0.9em;
+                padding: 8px 15px;
+            }
         }
 
         /* Scrollbar styling */
-        .messages::-webkit-scrollbar {
+        .messages::-webkit-scrollbar,
+        .chat-list::-webkit-scrollbar,
+        .users-list::-webkit-scrollbar {
             width: 10px;
         }
 
-        .messages::-webkit-scrollbar-track {
+        .messages::-webkit-scrollbar-track,
+        .chat-list::-webkit-scrollbar-track,
+        .users-list::-webkit-scrollbar-track {
             background: rgba(0, 50, 0, 0.3);
         }
 
-        .messages::-webkit-scrollbar-thumb {
+        .messages::-webkit-scrollbar-thumb,
+        .chat-list::-webkit-scrollbar-thumb,
+        .users-list::-webkit-scrollbar-thumb {
             background: #0f0;
             border-radius: 5px;
         }
 
-        .messages::-webkit-scrollbar-thumb:hover {
+        .messages::-webkit-scrollbar-thumb:hover,
+        .chat-list::-webkit-scrollbar-thumb:hover,
+        .users-list::-webkit-scrollbar-thumb:hover {
             background: #00ff00;
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-        }
-
-        /* Loading animation */
-        .typing-indicator {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-            padding: 12px;
-            background: rgba(0, 50, 0, 0.4);
-            border-left: 3px solid #0f0;
-            border-radius: 5px;
-        }
-
-        .typing-indicator span {
-            width: 8px;
-            height: 8px;
-            background: #0f0;
-            border-radius: 50%;
-            animation: typing 1.4s infinite;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typing {
-            0%, 60%, 100% {
-                opacity: 0.3;
-            }
-            30% {
-                opacity: 1;
-            }
         }
     </style>
 </head>
@@ -387,66 +542,47 @@
     <!-- Matrix Rain Background -->
     <div id="matrix-background"></div>
 
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-container">
+            <h1>01000111 01001100 01001001 01010100 01000011 01001000</h1>
+            <p>Enter your username to access the network</p>
+            <input type="text" id="usernameInput" class="login-input" placeholder="Enter username..." onkeypress="handleLoginKeyPress(event)">
+            <button class="login-btn" onclick="joinNetwork()">JOIN NETWORK</button>
+        </div>
+    </div>
+
     <!-- Header -->
     <header>
-        <div class="header-title">01000111 01001100 01001001 01010100 01000011 01001000</div>
-        <div class="binary-text">// GLITCH NETWORK INITIALIZED //</div>
+        <div class="header-content">
+            <div class="header-title">01000111 01001100 01001001 01010100 01000011 01001000</div>
+            <div class="binary-text">// GLITCH NETWORK INITIALIZED //</div>
+        </div>
+        <div class="user-info">
+            <div>User: <span id="currentUsername">--</span></div>
+        </div>
     </header>
 
     <!-- Main Container -->
     <div class="container">
-        <!-- Sidebar - Chats -->
+        <!-- Sidebar - Chat History -->
         <div class="sidebar">
-            <h3>📡 CHATS</h3>
-            <div class="user-item" onclick="selectChat('General')">
-                <span class="online-indicator"></span>
-                General
-            </div>
-            <div class="user-item" onclick="selectChat('Tech Talk')">
-                <span class="online-indicator"></span>
-                Tech Talk
-            </div>
-            <div class="user-item" onclick="selectChat('Random')">
-                <span class="online-indicator"></span>
-                Random
-            </div>
-            <div class="user-item" onclick="selectChat('Alex')">
-                <span class="online-indicator"></span>
-                Alex
-            </div>
-            <div class="user-item" onclick="selectChat('Jordan')">
-                <span class="online-indicator"></span>
-                Jordan
-            </div>
-            <div class="user-item" onclick="selectChat('Morgan')">
-                <span class="online-indicator"></span>
-                Morgan
+            <h3>💬 CHAT HISTORY</h3>
+            <div class="chat-list" id="chatList">
+                <div class="no-chats">No chats yet</div>
             </div>
         </div>
 
         <!-- Main Chat Area -->
         <div class="main-chat">
             <div class="chat-header">
-                <h2>💬 <span id="current-chat">General</span></h2>
+                <h2>💬 <span id="current-chat">Select a user to chat</span></h2>
             </div>
-            <div class="messages" id="messages-container">
-                <div class="message">
-                    <div class="message-sender">@SYSTEM</div>
-                    <div class="message-text">Welcome to GLITCH - the encrypted chat network. All communications are monitored.</div>
-                    <div class="message-time">12:00 AM</div>
-                </div>
-                <div class="message">
-                    <div class="message-sender">@CyberNinja</div>
-                    <div class="message-text">Hey everyone! This place looks sick 🤖</div>
-                    <div class="message-time">12:05 AM</div>
-                </div>
-                <div class="message">
-                    <div class="message-sender">@CodeWizard</div>
-                    <div class="message-text">Welcome to the network. Pretty cool interface!</div>
-                    <div class="message-time">12:07 AM</div>
-                </div>
+            <div class="no-chat-selected" id="noChatSelected">
+                Select a user from the right panel to start chatting
             </div>
-            <div class="input-area">
+            <div class="messages" id="messages-container" style="display: none;"></div>
+            <div class="input-area" id="inputArea" style="display: none;">
                 <input type="text" id="message-input" placeholder="Enter message..." onkeypress="handleKeyPress(event)">
                 <button class="send-btn" onclick="sendMessage()">SEND</button>
             </div>
@@ -454,35 +590,20 @@
 
         <!-- Right Sidebar - Online Users -->
         <div class="online-users">
-            <h3>👥 ONLINE</h3>
-            <div class="online-user">
-                <span class="online-indicator"></span>
-                CyberNinja
-            </div>
-            <div class="online-user">
-                <span class="online-indicator"></span>
-                CodeWizard
-            </div>
-            <div class="online-user">
-                <span class="online-indicator"></span>
-                PixelMaster
-            </div>
-            <div class="online-user">
-                <span class="online-indicator"></span>
-                ShadowCoder
-            </div>
-            <div class="online-user">
-                <span class="online-indicator"></span>
-                NeonGhost
-            </div>
-            <div class="online-user">
-                <span class="online-indicator"></span>
-                VortexUser
+            <h3>👥 ONLINE USERS</h3>
+            <div class="users-list" id="usersList">
+                <div class="no-users">Waiting for users...</div>
             </div>
         </div>
     </div>
 
     <script>
+        // WebSocket or Peer Connection Setup
+        const peers = new Map(); // Store peer connections
+        let currentUser = null;
+        let selectedUser = null;
+        const chatHistories = new Map(); // Store chat histories
+
         // Matrix Rain Animation
         function createMatrixRain() {
             const background = document.getElementById('matrix-background');
@@ -499,8 +620,6 @@
                 char.style.animationDelay = Math.random() * 2 + 's';
 
                 background.appendChild(char);
-
-                // Animate each character
                 animateMatrixChar(char);
             }
         }
@@ -527,48 +646,97 @@
         // Initialize matrix rain
         createMatrixRain();
 
-        // Chat functionality
-        let currentChat = 'General';
-        let messages = {
-            'General': [
-                { sender: '@SYSTEM', text: 'Welcome to GLITCH - the encrypted chat network. All communications are monitored.', time: '12:00 AM' },
-                { sender: '@CyberNinja', text: 'Hey everyone! This place looks sick 🤖', time: '12:05 AM' },
-                { sender: '@CodeWizard', text: 'Welcome to the network. Pretty cool interface!', time: '12:07 AM' }
-            ],
-            'Tech Talk': [
-                { sender: '@SYSTEM', text: 'Tech Talk room initialized.', time: '11:50 PM' },
-                { sender: '@PixelMaster', text: 'Anyone working on cool projects?', time: '11:55 PM' }
-            ],
-            'Random': [
-                { sender: '@SYSTEM', text: 'Random Chat activated.', time: '11:45 PM' }
-            ],
-            'Alex': [
-                { sender: '@SYSTEM', text: 'Direct message with Alex started.', time: '11:30 PM' }
-            ],
-            'Jordan': [
-                { sender: '@SYSTEM', text: 'Direct message with Jordan started.', time: '11:35 PM' }
-            ],
-            'Morgan': [
-                { sender: '@SYSTEM', text: 'Direct message with Morgan started.', time: '11:40 PM' }
-            ]
-        };
-
-        function selectChat(chatName) {
-            currentChat = chatName;
-            document.getElementById('current-chat').textContent = chatName;
-            loadMessages();
+        // Login functionality
+        function handleLoginKeyPress(event) {
+            if (event.key === 'Enter') {
+                joinNetwork();
+            }
         }
 
-        function loadMessages() {
+        function joinNetwork() {
+            const username = document.getElementById('usernameInput').value.trim();
+            
+            if (username === '') {
+                alert('Please enter a username');
+                return;
+            }
+
+            currentUser = username;
+            document.getElementById('currentUsername').textContent = username;
+            document.getElementById('loginModal').classList.add('hidden');
+
+            // Simulate broadcasting to other users
+            broadcastUserJoined(username);
+        }
+
+        // Simulate user broadcast (in real scenario, this would be WebSocket/Peer connections)
+        function broadcastUserJoined(username) {
+            // Simulate other users connecting
+            setTimeout(() => {
+                addOnlineUser(username);
+            }, 500);
+        }
+
+        function addOnlineUser(username) {
+            const usersList = document.getElementById('usersList');
+            
+            // Remove "Waiting for users" message
+            const noUsers = usersList.querySelector('.no-users');
+            if (noUsers) {
+                noUsers.remove();
+            }
+
+            // Check if user already exists
+            if (document.querySelector(`[data-user="${username}"]`)) {
+                return;
+            }
+
+            const userEl = document.createElement('div');
+            userEl.className = 'online-user';
+            userEl.setAttribute('data-user', username);
+            userEl.onclick = () => selectUserChat(username);
+            userEl.innerHTML = `
+                <span class="online-indicator"></span>
+                <span>${username}</span>
+            `;
+
+            usersList.appendChild(userEl);
+        }
+
+        function selectUserChat(username) {
+            if (username === currentUser) {
+                alert("You can't chat with yourself!");
+                return;
+            }
+
+            selectedUser = username;
+            document.getElementById('current-chat').textContent = username;
+            document.getElementById('noChatSelected').style.display = 'none';
+            document.getElementById('messages-container').style.display = 'flex';
+            document.getElementById('inputArea').style.display = 'flex';
+
+            loadChatHistory(username);
+
+            // Update active chat in history
+            document.querySelectorAll('.chat-item').forEach(el => {
+                el.classList.remove('active');
+            });
+            const activeChat = document.querySelector(`[data-chat="${username}"]`);
+            if (activeChat) {
+                activeChat.classList.add('active');
+            }
+        }
+
+        function loadChatHistory(username) {
             const container = document.getElementById('messages-container');
             container.innerHTML = '';
 
-            const chatMessages = messages[currentChat] || [];
-            chatMessages.forEach(msg => {
+            const messages = chatHistories.get(username) || [];
+            messages.forEach(msg => {
                 const messageEl = document.createElement('div');
-                messageEl.className = 'message';
+                messageEl.className = 'message' + (msg.sender === currentUser ? ' own' : '');
                 messageEl.innerHTML = `
-                    <div class="message-sender">${msg.sender}</div>
+                    <div class="message-sender">@${msg.sender}</div>
                     <div class="message-text">${msg.text}</div>
                     <div class="message-time">${msg.time}</div>
                 `;
@@ -579,6 +747,8 @@
         }
 
         function sendMessage() {
+            if (!selectedUser) return;
+
             const input = document.getElementById('message-input');
             const text = input.value.trim();
 
@@ -587,48 +757,54 @@
             const now = new Date();
             const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+            // Add to chat history
+            if (!chatHistories.has(selectedUser)) {
+                chatHistories.set(selectedUser, []);
+                addChatToHistory(selectedUser);
+            }
+
+            const message = { sender: currentUser, text: text, time: time };
+            chatHistories.get(selectedUser).push(message);
+
+            // Display message
             const messageEl = document.createElement('div');
             messageEl.className = 'message own';
             messageEl.innerHTML = `
-                <div class="message-sender">@YOU</div>
+                <div class="message-sender">@${currentUser}</div>
                 <div class="message-text">${text}</div>
                 <div class="message-time">${time}</div>
             `;
 
             document.getElementById('messages-container').appendChild(messageEl);
-
-            if (!messages[currentChat]) {
-                messages[currentChat] = [];
-            }
-            messages[currentChat].push({ sender: '@YOU', text: text, time: time });
-
             input.value = '';
             document.getElementById('messages-container').scrollTop = document.getElementById('messages-container').scrollHeight;
 
-            // Simulate response after 1 second
-            setTimeout(() => {
-                const responses = [
-                    'That\'s awesome! 🔥',
-                    'Totally agree with you!',
-                    'Nice! Keep it up! 💪',
-                    '01010101 01010101',
-                    'Interesting perspective...',
-                    'Let\'s discuss more about this!',
-                    'I love this energy!'
-                ];
+            // In a real scenario, this would send the message to the other user via WebSocket/Peer connection
+            simulateMessageReceived(selectedUser, text, time);
+        }
 
-                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                const responseEl = document.createElement('div');
-                responseEl.className = 'message';
-                responseEl.innerHTML = `
-                    <div class="message-sender">@RandomUser</div>
-                    <div class="message-text">${randomResponse}</div>
-                    <div class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-                `;
+        function simulateMessageReceived(fromUser, text, time) {
+            // Simulate the other user receiving the message
+            // In a real app, this would be triggered by WebSocket/Peer connection
+            console.log(`Message sent to ${fromUser}: ${text}`);
+        }
 
-                document.getElementById('messages-container').appendChild(responseEl);
-                document.getElementById('messages-container').scrollTop = document.getElementById('messages-container').scrollHeight;
-            }, 1000);
+        function addChatToHistory(username) {
+            const chatList = document.getElementById('chatList');
+            
+            // Remove "No chats yet" message
+            const noChats = chatList.querySelector('.no-chats');
+            if (noChats) {
+                noChats.remove();
+            }
+
+            const chatEl = document.createElement('div');
+            chatEl.className = 'chat-item';
+            chatEl.setAttribute('data-chat', username);
+            chatEl.textContent = username;
+            chatEl.onclick = () => selectUserChat(username);
+
+            chatList.appendChild(chatEl);
         }
 
         function handleKeyPress(event) {
@@ -637,11 +813,16 @@
             }
         }
 
-        // Recreate matrix rain on window resize
         window.addEventListener('resize', () => {
             document.getElementById('matrix-background').innerHTML = '';
             createMatrixRain();
         });
+
+        // Example: Simulate other users joining
+        setTimeout(() => {
+            // These would normally come from actual users connecting
+            console.log('Simulating other users connecting...');
+        }, 1000);
     </script>
 
 </body>
